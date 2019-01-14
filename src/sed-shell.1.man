@@ -1,0 +1,17 @@
+Interactive-sed-shell v0.1
+
+
+How it works:
+	- each line you type is executed as a GNU sed script
+	- the shell environment contains a single memory register, initially empty
+	- the sed script receives as input the content of the memory register
+	- the memory register is overwritten with the script's output (useful for chaining scripts)
+
+Tips and tricks:
+	- if you want to save the memory register, run ":r;$!{N;br};p;wmem.reg"; then to load it, run "1rmem.reg"
+
+Examples
+	- comming soon
+
+Author:
+	- seshoumara (https://github.com/seshoumara/interactive-sed-shell)

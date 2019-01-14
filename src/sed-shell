@@ -1,0 +1,44 @@
+#!/bin/bash
+
+#Author: seshoumara
+#Repository: https://github.com/seshoumara/interactive-sed-shell
+
+
+#TODO:
+	#1. Turn the manual into an actual Linux man format (see groff_man)
+	#2. Implement command history
+
+
+
+#this is by default in scripts, but I make it explicit since sed syntax contains '!'
+set +H
+
+sed_program="$(which sed)"
+sed_flags="-rn"
+prompt="> "
+
+
+memory_register=""
+clear
+while true; do
+	read -erp "$prompt" sed_command
+	
+	#comparing to an empty string might not be a good idea, so I append 'x'
+	if [[ "$sed_command""x" == "x" ]]; then
+		continue
+	fi
+	if [[ "$sed_command" == "Q" ]]; then
+		exit
+	fi
+	
+	#since the command substitution removes the trailing newlines, I'm appending an artifical 'x' and then I delete it
+	sed_output="$("$sed_program" "$sed_flags" "$sed_command" <<< "$memory_register";echo "x")"
+	#if sed gives no output, only 'x' exists instead of '\nx', in which case "${sed_output%??}" will fail (deleting from empty string is ok though)
+	sed_output="${sed_output%?}"
+	sed_output="${sed_output%?}"
+	
+	memory_register="$sed_output"
+	if [[ "$sed_output""x" != "x" ]]; then
+		echo "$sed_output"
+	fi
+done
